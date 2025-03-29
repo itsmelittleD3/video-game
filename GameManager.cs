@@ -6,6 +6,7 @@ class GameManager
     public const int SCREEN_HEIGHT = 600;
 
     private string _title;
+    private List<GameObject> _gameObjects= new List<GameObject>();
 
     public GameManager()
     {
@@ -24,7 +25,7 @@ class GameManager
         // Raylib.InitAudioDevice();
 
         InitializeGame();
-
+      
         while (!Raylib.WindowShouldClose())
         {
             HandleInput();
@@ -47,7 +48,8 @@ class GameManager
     /// </summary>
     private void InitializeGame()
     {
-
+        Player p = new Player(0,0);
+        _gameObjects.Add(p);
     }
 
     /// <summary>
@@ -55,7 +57,10 @@ class GameManager
     /// </summary>
     private void HandleInput()
     {
-
+            foreach (GameObject item in _gameObjects)
+            {
+                item.HandleInput();
+            }
     }
 
     /// <summary>
@@ -63,14 +68,34 @@ class GameManager
     /// </summary>
     private void ProcessActions()
     {
-
+        foreach (GameObject item in _gameObjects)
+        {
+            item.ProcessActions();
+        }
     }
 
+    private void HandleCollisions()
+    {
+        for (int i = 0; i< _gameElements.Coiunt; i++)
+        {
+            for (int j = i+1; j < _gameElements.Count; j++)
+            {
+                if (_gameElements[i].CollidesWith(_gameElements[j]))
+                {
+                    _gameElements[i].HandleCollision(_gameElements[j]);
+                    _gameElements[j].HandleCollision(_gameElements[i]);
+                }
+            }
+        }
+    }
     /// <summary>
     /// Draws all elements on the screen.
     /// </summary>
     private void DrawElements()
     {
-
+        foreach (GameObject item in _gameObjects)
+        {
+            item.Draw();
+        }
     }
 }
